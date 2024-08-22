@@ -13,13 +13,9 @@ dotenv.config();
 connectDB();
 
 const app = express();
-const corsOptions = {
-  origin: "https://blogapplication21.onrender.com", // Replace with your actual frontend URL
-  credentials: true, // if your API uses cookies or sessions
-  optionsSuccessStatus: 200, // For legacy browser support
-};
 
-app.use(cors(corsOptions));
+
+app.use(cors());
 
 app.use(cors());
 
