@@ -1,4 +1,3 @@
-// routes/commentRoutes.js
 const express = require("express");
 const {
   createComment,

@@ -1,7 +1,6 @@
 const Post = require("../models/Post");
 const { validationResult } = require("express-validator");
 
-// Create a new post
 exports.createPost = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -9,11 +8,10 @@ exports.createPost = async (req, res) => {
   }
 
   try {
-    // Excerpt is mandatory, so it must be provided in the request
     const post = new Post({
       title: req.body.title,
       content: req.body.content,
-      excerpt: req.body.excerpt, // Must be provided
+      excerpt: req.body.excerpt,
       author: req.user.id,
     });
 
@@ -24,7 +22,6 @@ exports.createPost = async (req, res) => {
   }
 };
 
-// Get all posts
 exports.getPosts = async (req, res) => {
   try {
     const posts = await Post.find().populate("author", "name");
@@ -35,8 +32,6 @@ exports.getPosts = async (req, res) => {
   }
 };
 
-// Get post by ID
-// Get post by ID
 exports.getPostById = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id).populate("author", "name");
@@ -44,7 +39,6 @@ exports.getPostById = async (req, res) => {
       return res.status(404).json({ error: "Post not found" });
     }
 
-    // Check if the authenticated user is the author
     if (post.author._id.toString() !== req.user._id.toString()) {
       return res.status(403).json({ error: "Unauthorized access" });
     }
@@ -55,7 +49,6 @@ exports.getPostById = async (req, res) => {
   }
 };
 
-// Update a post
 exports.updatePost = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -69,16 +62,13 @@ exports.updatePost = async (req, res) => {
       return res.status(404).json({ error: "Post not found" });
     }
 
-    // Check if user is the author
     if (post.author.toString() !== req.user.id) {
       return res.status(401).json({ error: "User not authorized" });
     }
 
-    // Update fields
     post.title = req.body.title || post.title;
     post.content = req.body.content || post.content;
-    post.excerpt = req.body.excerpt || post.excerpt; // Must be provided
-
+    post.excerpt = req.body.excerpt || post.excerpt;
     const updatedPost = await post.save();
     res.json(updatedPost);
   } catch (err) {
@@ -86,36 +76,24 @@ exports.updatePost = async (req, res) => {
   }
 };
 
-// Delete a post
 exports.deletePost = async (req, res) => {
   try {
-    // Find the post by ID and delete it
     const result = await Post.deleteOne({ _id: req.params.id });
 
     if (result.deletedCount === 0) {
       return res.status(404).json({ error: "Post not found" });
     }
 
-    // Optionally: Check if user is the author
-    // You may need to fetch the post again to ensure it's the right one
-    // const post = await Post.findById(req.params.id);
-    // if (post.author.toString() !== req.user.id) {
-    //   return res.status(401).json({ error: "User not authorized" });
-    // }
-
     res.json({ message: "Post removed" });
   } catch (err) {
-    console.log(err); // Log the error for debugging
+    console.log(err);
     res.status(500).json({ error: "Server error" });
   }
 };
 
-// Get posts by user ID
 exports.getPostsByUserId = async (req, res) => {
   try {
-    const { userId } = req.params; // Get user ID from URL params
-
-    // Fetch posts only by the user with the given ID
+    const { userId } = req.params;
     const posts = await Post.find({ author: userId }).populate(
       "author",
       "name"

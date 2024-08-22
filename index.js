@@ -14,7 +14,6 @@ connectDB();
 
 const app = express();
 
-// Use CORS middleware with default settings
 app.use(cors());
 
 app.use(express.json());
@@ -30,6 +29,9 @@ app.use("/api/comments", commentRoutes);
 app.use(errorHandler);
 
 const PORT = process.env.PORT;
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
+
+  app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+  
+})
+module.exports=app;

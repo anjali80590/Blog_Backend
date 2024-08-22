@@ -6,7 +6,7 @@ const {
   updatePost,
   getPostsByUserId,
   deletePost,
-} = require("../controllers/postController"); // Ensure this path is correct
+} = require("../controllers/postController"); 
 const { protect } = require("../middlewares/authMiddleware");
 const { postValidation, validateResult } = require("../utils/validators");
 
